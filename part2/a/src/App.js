@@ -25,6 +25,11 @@ const App = () => {
           name: "Redux",
           exercises: 11,
           id: 4
+        },
+        {
+          name: "hehe",
+          exercises: 69,
+          id: 5
         }
       ]
     },
@@ -41,11 +46,15 @@ const App = () => {
           name: "Middlewares",
           exercises: 7,
           id: 2
+        },
+        {
+          name: "hoho",
+          exercises: 11,
+          id: 3
         }
       ]
     }
   ]
-  console.log(typeof(courses))
 
   return (
     <div>

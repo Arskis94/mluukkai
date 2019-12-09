@@ -1,22 +1,22 @@
 import React from "react"
 
 const Content = ({ content }) => {
-    console.log(content)
-    const Lines = () => {
-        return content.map( (item, i) => <li key={item.parts[i].id}>{}</li>)
-    }
-
-
-
     const rows = () => content.map((item, i) => {
         const total = item.parts.reduce((a, b) => {
             return a + b.exercises
         }, 0)
+
+        const xoxo = () => item.parts.map(item => {
+            return (
+                <li key={item.id}>{item.name} {item.exercises}</li>
+            )
+        })
+
         return (
-            <div>
+            <div key={item.parts[i].id}>
                 <h2>{item.name}</h2>
                 <ul>
-                    <Lines />
+                    {xoxo()}
                 </ul>
                 <p style={{ fontWeight: "bold" }}>Total of {total} exercises</p>
             </div>
