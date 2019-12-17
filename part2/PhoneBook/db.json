@@ -1,0 +1,22 @@
+{
+  "persons": [
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "isActive": true,
+      "id": 1
+    },
+    {
+      "name": "Matti Nykänen",
+      "number": "040 1234 123",
+      "isActive": true,
+      "id": 4
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "123",
+      "isActive": true,
+      "id": 3
+    }
+  ]
+}
