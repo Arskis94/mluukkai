@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import axios from "axios"
 import Note from "./components/Note"
 import noteService from "./services/notes"
+import Footer from "./components/Footer"
 
 
 
 const App = () => {
   const [notes, setNotes] = useState([]),
     [newNote, setNewNote] = useState(""),
-    [showAll, setShowAll] = useState(true)
+    [showAll, setShowAll] = useState(true),
+    [errorMessage, setErrorMessage] = useState("Some error message")
 
   useEffect(() => {
     noteService
@@ -16,7 +17,22 @@ const App = () => {
       .then(initialNotes => {
         setNotes(initialNotes)
       })
+      .catch(error => {
+        alert("Woopsie")
+      })
   }, [])
+
+  const Notification = ({message}) => {
+    if(message === null) {
+      return null
+    }
+
+    return (
+      <div className="error">
+        {message}
+      </div>
+    )
+  }
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id),
@@ -28,9 +44,12 @@ const App = () => {
         setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
-        alert(
-          `the note ${note.content} was already dseleted from server`
+        setErrorMessage(
+          `Note "${note.content}" was already removed from the server`
         )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
 
@@ -57,7 +76,7 @@ const App = () => {
     setNewNote(e.target.value)
   }
 
-  const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
+  const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
 
   const rows = () => notesToShow.map(note =>
@@ -71,6 +90,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? "imporant" : "all"}
@@ -86,6 +106,7 @@ const App = () => {
         />
         <button type="submit">Save</button>
       </form>
+      <Footer />
     </div>
   )
 }

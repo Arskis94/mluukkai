@@ -4,7 +4,7 @@ const Filter = ({ searchName, filterName }) => {
     return (
         <div>
             <h2>Search</h2>
-            Search: <input value={filterName} onChange={searchName}></input>
+            Search by name: <input value={filterName} onChange={searchName}></input>
         </div>
     )
 }

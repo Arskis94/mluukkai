@@ -2,7 +2,7 @@ import React from "react"
 
 const PopulateList = ({ persons, filterName, deletePerson }) => {
     const list = persons
-        .filter(person => filterName === "" || person.name.includes(filterName))
+        .filter(person => filterName === "" || person.name.toLowerCase().includes(filterName.toLowerCase()))
         .map(person =>
             person.isActive ?
                 <li key={person.id}>
