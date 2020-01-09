@@ -1,8 +1,22 @@
 const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
+const morgan = require("morgan")
+const cors = require("cors")
 
 app.use(bodyParser.json())
+app.use(cors())
+
+const requestLogger = (req, res, next) => {
+    console.log("Method:", req.method)
+    console.log("Path:", req.path)
+    console.log("Body:", req.body)
+    console.log("---:")
+    next()
+}
+app.use(requestLogger)
+
+app.use(morgan("combined"))
 
 let persons = [{
         name: "Jou Wadap",
@@ -13,8 +27,17 @@ let persons = [{
         name: "Mou Wadap",
         number: "040-1234645",
         id: 2
+    },
+    {
+        name: "Tru Man",
+        number: "044-777 777",
+        id: 3
     }
 ]
+
+app.get("/", (req, res) => {
+    res.send("<h1>Hello world!</h1>")
+})
 
 
 app.get("/info", (req, res) => {
@@ -89,6 +112,15 @@ app.delete("/api/persons/:id", (req, res) => {
     res.status(204).end()
 })
 
-const port = 3001
-app.listen(port)
-console.log(`Server running on port ${port}`)
+
+
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({
+        error: "unknown endpoint"
+    })
+}
+app.use(unknownEndpoint)
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT)
+console.log(`Server running on port ${PORT}`)

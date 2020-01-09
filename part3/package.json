@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "expess": "0.0.1-security",
+    "morgan": "^1.9.1",
     "nodemon": "^2.0.2"
   }
 }
