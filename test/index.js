@@ -2,6 +2,16 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const cors = require("cors")
+const Note = require("./models/note")
+
+if (process.argv.lengh < 3) {
+    console.log("give password as argument")
+    process.exit(1)
+}
+
+const password = process.argv[2]
+
+const url = `mongodb+srv://fullstack:${password}@cluster0-kbdoa.mongodb.net/note-app?retryWrites=true&w=majority`
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -33,6 +43,8 @@ let notes = [{
     important: true
 }]
 
+app.use(express.static("build"))
+
 app.get("/", (req, res) => {
     res.send("<h1>Hello world!</h1>")
 })
@@ -60,8 +72,10 @@ app.post("/notes", (req, res) => {
     res.json(note)
 })
 
-app.get("/notes", (req, res) => {
-    res.json(notes)
+app.get("/api/notes", (req, res) => {
+    Note.find({}).then(notes => {
+        res.json(notes.map(note => note.toJSON()))
+    })
 })
 
 app.get("/notes/:id", (req, res) => {
@@ -82,7 +96,9 @@ app.delete("/notes/:id", (req, res) => {
 })
 
 const unknownEndpoint = (req, res) => {
-    res.status(404).send({ error: "unkown endpoint "})
+    res.status(404).send({
+        error: "unkown endpoint "
+    })
 }
 app.use(unknownEndpoint)
 

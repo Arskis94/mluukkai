@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Note from "./components/Note"
 import noteService from "./services/notes"
+import Notification from "./components/Notification"
 import Footer from "./components/Footer"
 
 
@@ -21,18 +22,6 @@ const App = () => {
         alert("Woopsie")
       })
   }, [])
-
-  const Notification = ({message}) => {
-    if(message === null) {
-      return null
-    }
-
-    return (
-      <div className="error">
-        {message}
-      </div>
-    )
-  }
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id),
