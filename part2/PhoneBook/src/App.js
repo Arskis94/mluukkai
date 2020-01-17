@@ -85,7 +85,7 @@ const App = () => {
               }, 5000)
             })
             .catch(error => {
-              setErrorMessage(`Something went wrong and we couldn't add ${person.name} to list`)
+              setErrorMessage(`Something went wrong and we couldn't add ${person.name} to list`, error.message)
               setTimeout(() => {
                 setErrorMessage(null)
               }, 5000)

@@ -3,7 +3,7 @@ const app = express()
 require("dotenv").config()
 const bodyParser = require("body-parser")
 
-const Person = require("./models/note")
+const Person = require("./models/person")
 
 app.use(bodyParser.json())
 const cors = require("cors")
@@ -25,22 +25,27 @@ app.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>")
 })
 
+const date = new Date()
+
+app.get("/info", (req, res) => {
+  res.send(`<p>Phonebook has info for ${res} people</p><br /><p>${date}</p>`)
+})
+
 app.post("/api/persons", (req, res) => {
   const body = req.body
 
-  if (body.content === undefined) {
+  if (body.name === undefined || body.number === undefined) {
     return res.status(400).json({
       error: "content missing"
     })
   }
 
-  const note = new Person({
-    content: body.content,
-    important: body.important || false,
-    date: new Date()
+  const person = new Person({
+    name: body.name,
+    number: body.number
   })
 
-  note
+  person
     .save()
     .then(savedPerson => savedPerson.toJSON())
     .then(savedAndFormattedPerson => {
@@ -57,9 +62,9 @@ app.get("/api/persons", (req, res) => {
 
 app.get("/api/persons/:id", (req, res) => {
   Person.findById(req.params.id)
-    .then(note => {
-      if (note) {
-        res.json(note.toJSON())
+    .then(person => {
+      if (person) {
+        res.json(person.toJSON())
       } else {
         res.status(204).end()
       }
@@ -75,19 +80,13 @@ app.delete("/api/persons/:id", (req, res) => {
     .catch(error => next(error))
 })
 
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({
-    error: "unknown endpoint"
-  })
-}
-
 app.put("/api/persons/:id", (req, res, next) => {
   const body = req.body
-  const note = {
-    content: body.content,
-    important: body.important
+  const person = {
+    name: body.name,
+    number: body.number
   }
-  Person.findByIdAndUpdate(req.params.id, note, {
+  Person.findByIdAndUpdate(req.params.id, person, {
     new: true
   })
     .then(updatedPerson => {
@@ -95,6 +94,14 @@ app.put("/api/persons/:id", (req, res, next) => {
     })
     .catch(error => next(error))
 })
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({
+    error: "unknown endpoint"
+  })
+}
+
+app.use(unknownEndpoint)
 
 const errorHandler = (error, req, res, next) => {
   console.log(error.message)
@@ -107,13 +114,10 @@ const errorHandler = (error, req, res, next) => {
       error: error.message
     })
   }
-
   next(error)
 }
 
 app.use(errorHandler)
-
-app.use(unknownEndpoint)
 
 const PORT = process.env.PORT
 
