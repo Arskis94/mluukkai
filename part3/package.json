@@ -1,11 +1,7 @@
 {
   "name": "part3",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "start": "node index.js",
     "watch": "nodemon index.js",
@@ -16,18 +12,13 @@
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Arskis94/mluukkai.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Arskis94/mluukkai/issues"
-  },
-  "homepage": "https://github.com/Arskis94/mluukkai#readme",
   "devDependencies": {
     "nodemon": "^2.0.2"
+  },
+  "engines": {
+    "node": "10.16.3"
   },
   "dependencies": {
     "cors": "^2.8.5",
