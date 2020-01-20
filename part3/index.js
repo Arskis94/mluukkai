@@ -28,17 +28,13 @@ app.get("/", (req, res) => {
 const date = new Date()
 
 app.get("/info", (req, res) => {
-  res.send(`<p>Phonebook has info for ${res} people</p><br /><p>${date}</p>`)
+  res.send(
+    `<p>Phonebook has info for ${res.length} persons</p><br /><p>${date}</p>`
+  )
 })
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body
-
-  if (body.name === undefined || body.number === undefined) {
-    return res.status(400).json({
-      error: "content missing"
-    })
-  }
 
   const person = new Person({
     name: body.name,
@@ -60,7 +56,7 @@ app.get("/api/persons", (req, res) => {
   })
 })
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then(person => {
       if (person) {
@@ -72,9 +68,9 @@ app.get("/api/persons/:id", (req, res) => {
     .catch(error => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -86,9 +82,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     name: body.name,
     number: body.number
   }
-  Person.findByIdAndUpdate(req.params.id, person, {
-    new: true
-  })
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
     .then(updatedPerson => {
       res.json(updatedPerson.toJSON())
     })
@@ -96,9 +90,7 @@ app.put("/api/persons/:id", (req, res, next) => {
 })
 
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({
-    error: "unknown endpoint"
-  })
+  res.status(404).send({ error: "unknown endpoint" })
 }
 
 app.use(unknownEndpoint)
@@ -119,6 +111,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 
 app.listen(PORT, () => {

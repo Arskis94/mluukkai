@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 
+// eslint-disable-next-line no-undef
 const url = process.env.MONGODB_URI
 
 mongoose.set("useFindAndModify", false)
@@ -8,27 +9,27 @@ console.log("connecting to", url)
 
 mongoose
   .connect(url, { useNewUrlParser: true })
-  .then(result => {
+  .then(() => {
     console.log("connected to MongoDB")
   })
   .catch(error => {
     console.log("error connecting to MongoDB:", error.message)
   })
 
-const noteSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlenght: 3,
+    minlength: 3,
     required: true
   },
   number: {
     type: String,
-    required: true,
-    minlength: 8
+    minlength: 8,
+    required: true
   }
 })
 
-noteSchema.set("toJSON", {
+personSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
@@ -36,4 +37,4 @@ noteSchema.set("toJSON", {
   }
 })
 
-module.exports = mongoose.model("Person", noteSchema)
+module.exports = mongoose.model("Person", personSchema)
